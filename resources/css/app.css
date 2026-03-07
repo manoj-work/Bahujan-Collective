@@ -30,4 +30,8 @@
     .glass-panel {
         @apply border border-slate-800/70 bg-slate-900/70 backdrop-blur-xl shadow-[0_25px_70px_-40px_rgba(0,0,0,0.9)];
     }
+
+    .event-title {
+        color: orangered;
+    }
 }

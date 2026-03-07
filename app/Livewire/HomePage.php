@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\Event;
 use App\Models\EventCategory;
 use App\Models\EventType;
+use App\Models\Organization;
 use Carbon\Carbon;
 use Livewire\Component;
 
@@ -32,11 +33,7 @@ class HomePage extends Component
 
     public array $modeOptions = [];
 
-    public array $organizations = [
-        ['name' => 'Ambedkar Reading Club Bangalore', 'url' => '#'],
-        ['name' => 'Bahujan Collective Org 2', 'url' => '#'],
-        ['name' => 'Bahujan Collective Org 3', 'url' => '#'],
-    ];
+    public array $organizations = [];
 
     public function mount(): void
     {
@@ -52,6 +49,7 @@ class HomePage extends Component
 
         $this->categories = $this->loadCategories();
         $this->modeOptions = $this->loadEventTypes();
+        $this->organizations = $this->loadOrganizations();
     }
 
     public function setMode(string $mode): void
@@ -107,7 +105,15 @@ class HomePage extends Component
     public function getFilteredEventsProperty(): array
     {
         $query = Event::query()
-            ->with(['category', 'type']);
+            ->with(['category', 'type'])
+            ->where(function ($q) {
+                $q->where('APPROVAL_STATUS', 'approved')
+                    ->orWhereNull('APPROVAL_STATUS');
+            })
+            ->where(function ($q) {
+                $q->whereDate('START_DATE', '>=', Carbon::today())
+                    ->orWhereNull('START_DATE');
+            });
 
         if ($this->filters['category'] !== 'all') {
             $categoryFilter = $this->filters['category'];
@@ -272,5 +278,19 @@ class HomePage extends Component
     protected function normalizeKey(?string $value): string
     {
         return strtolower(str_replace([' ', '-'], '_', $value ?? ''));
+    }
+
+    protected function loadOrganizations(): array
+    {
+        return Organization::query()
+            ->orderBy('ORG_NAME')
+            ->get()
+            ->map(function (Organization $organization) {
+                return [
+                    'name' => $organization->ORG_NAME,
+                    'url' => $organization->WEBSITE ?: '#',
+                ];
+            })
+            ->toArray();
     }
 }

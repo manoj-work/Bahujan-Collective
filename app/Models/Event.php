@@ -28,6 +28,10 @@ class Event extends Model
         'RSVP_COUNT' => 'integer',
     ];
 
+    protected $attributes = [
+        'APPROVAL_STATUS' => 'pending',
+    ];
+
     public function category()
     {
         return $this->belongsTo(EventCategory::class, 'EVENT_CATEGORY_ID', 'EVENT_CATEGORY_ID');
