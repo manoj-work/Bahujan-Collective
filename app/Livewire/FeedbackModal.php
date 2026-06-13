@@ -27,17 +27,7 @@ class FeedbackModal extends Component
 
     public function submit(): void
     {
-        $this->validate([
-            'name' => 'required|string|max:100',
-            'email' => 'required|email|max:255',
-            'message' => 'required|string|min:10',
-        ]);
-
-        Feedback::create([
-            'NAME' => $this->name,
-            'EMAIL' => $this->email,
-            'MESSAGE' => $this->message,
-        ]);
+        Feedback::createFromSubmission($this->validate(Feedback::submissionRules()));
 
         $this->submitted = true;
         

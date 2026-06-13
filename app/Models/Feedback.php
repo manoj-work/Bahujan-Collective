@@ -24,5 +24,22 @@ class Feedback extends Model
         'EMAIL',
         'MESSAGE',
     ];
-}
 
+    public static function submissionRules(): array
+    {
+        return [
+            'name' => 'required|string|max:100',
+            'email' => 'required|email|max:255',
+            'message' => 'required|string|min:10',
+        ];
+    }
+
+    public static function createFromSubmission(array $data): self
+    {
+        return self::create([
+            'NAME' => $data['name'],
+            'EMAIL' => $data['email'],
+            'MESSAGE' => $data['message'],
+        ]);
+    }
+}

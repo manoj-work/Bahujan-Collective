@@ -46,13 +46,20 @@ return new class extends Migration
                 ]);
         }
 
-        // Cast columns to bigint explicitly for Postgres before schema changes.
-        DB::statement('ALTER TABLE events ALTER COLUMN "EVENT_CATEGORY_ID" TYPE BIGINT USING "EVENT_CATEGORY_ID"::bigint');
-        DB::statement('ALTER TABLE events ALTER COLUMN "EVENT_TYPE_ID" TYPE BIGINT USING "EVENT_TYPE_ID"::bigint');
+        // Cast columns to bigint before schema changes (driver-specific).
+        if (DB::getDriverName() === 'pgsql') {
+            DB::statement('ALTER TABLE events ALTER COLUMN "EVENT_CATEGORY_ID" TYPE BIGINT USING "EVENT_CATEGORY_ID"::bigint');
+            DB::statement('ALTER TABLE events ALTER COLUMN "EVENT_TYPE_ID" TYPE BIGINT USING "EVENT_TYPE_ID"::bigint');
+        } elseif (DB::getDriverName() === 'mysql') {
+            DB::statement('ALTER TABLE events MODIFY EVENT_CATEGORY_ID BIGINT UNSIGNED NULL');
+            DB::statement('ALTER TABLE events MODIFY EVENT_TYPE_ID BIGINT UNSIGNED NULL');
+        }
 
         Schema::table('events', function (Blueprint $table) {
-            $table->unsignedBigInteger('EVENT_CATEGORY_ID')->nullable()->change();
-            $table->unsignedBigInteger('EVENT_TYPE_ID')->nullable()->change();
+            if (DB::getDriverName() !== 'pgsql' && DB::getDriverName() !== 'mysql') {
+                $table->unsignedBigInteger('EVENT_CATEGORY_ID')->nullable()->change();
+                $table->unsignedBigInteger('EVENT_TYPE_ID')->nullable()->change();
+            }
 
             // Indexes for common filters
             $table->index('EVENT_CATEGORY_ID', 'events_category_idx');
