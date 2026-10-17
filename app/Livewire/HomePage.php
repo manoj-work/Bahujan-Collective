@@ -42,6 +42,10 @@ class HomePage extends Component
 
     public array $organizations = [];
 
+    public bool $showEventModal = false;
+
+    public ?array $selectedEvent = null;
+
     public function mount(): void
     {
         $today = Carbon::today();
@@ -112,6 +116,31 @@ class HomePage extends Component
     public function loadMore(): void
     {
         $this->perPage += 4;
+    }
+
+    public function openEventDetail(int $eventId): void
+    {
+        $event = Event::query()
+            ->with(['category', 'type'])
+            ->where(function ($q) {
+                $q->where('APPROVAL_STATUS', 'approved')
+                    ->orWhereNull('APPROVAL_STATUS');
+            })
+            ->where('EVENT_ID', $eventId)
+            ->first();
+
+        if (! $event) {
+            return;
+        }
+
+        $this->selectedEvent = $this->mapEventDetail($event);
+        $this->showEventModal = true;
+    }
+
+    public function closeEventDetail(): void
+    {
+        $this->showEventModal = false;
+        $this->selectedEvent = null;
     }
 
     public function getFilteredEventsProperty(): array
@@ -257,6 +286,60 @@ class HomePage extends Component
             'date_order' => $dateOrder,
             'time_sort' => $timeSort,
         ];
+    }
+
+    protected function mapEventDetail(Event $event): array
+    {
+        $summary = $this->mapEvent($event);
+
+        $endDate = $event->END_DATE ? Carbon::parse($event->END_DATE) : null;
+        $endTime = $event->END_TIME ? Carbon::parse($event->END_TIME) : null;
+
+        $addressParts = collect([
+            $event->ADDRESS_LINE_1,
+            $event->ADDRESS_LINE_2,
+            $event->LANDMARK,
+            $event->CITY_TOWN,
+            $event->STATE_PROVINCE,
+            $event->COUNTRY,
+        ])
+            ->map(fn ($part) => is_string($part) ? trim($part) : $part)
+            ->filter()
+            ->unique(fn ($part) => strtolower((string) $part))
+            ->values()
+            ->all();
+
+        $donation = trim((string) ($event->COST_DONATION ?? ''));
+        $currency = trim((string) ($event->CURRENCY ?? ''));
+        if ($donation === '' || $donation === '0' || strcasecmp($donation, 'free') === 0) {
+            $cost = 'Free';
+        } elseif ($currency !== '') {
+            $cost = $currency . ' ' . $donation;
+        } else {
+            $cost = $donation;
+        }
+
+        return array_merge($summary, [
+            'tagline' => $event->TAGLINE,
+            'description' => $event->DESCRIPTION,
+            'cover_pic' => $event->COVER_PIC,
+            'event_link' => $event->EVENT_LINK,
+            'category_label' => $event->category?->EVENT_CATEGORY_DESCRIPTION
+                ?: $event->category?->EVENT_CATEGORY_VALUE
+                ?: ($this->categories[$summary['category']] ?? 'Event'),
+            'mode_label' => $event->type?->EVENT_TYPE_DESCRIPTION
+                ?: $event->type?->EVENT_TYPE_VALUE
+                ?: str_replace('_', ' ', ucfirst($summary['mode'])),
+            'start_date_label' => $summary['date_heading'],
+            'end_date_label' => $endDate ? $endDate->format('d M Y') : null,
+            'end_time' => $endTime ? $endTime->format('g:i A') : null,
+            'timezone' => $event->TIME_ZONE,
+            'location_name' => $event->LOCATION_NAME,
+            'address_lines' => $addressParts,
+            'cost' => $cost !== '' ? $cost : null,
+            'visibility' => $event->EVENT_VISIBILITY,
+            'rsvp_status' => $event->EVENT_RSVP,
+        ]);
     }
 
     protected function loadCategories(): array

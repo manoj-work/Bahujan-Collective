@@ -62,17 +62,31 @@ class EventSeeder extends Seeder
             $typeMap['virtual'] = $typeMap['online'];
         }
 
+        // Relative dates so demos always show as today / upcoming.
+        $d0 = $today->copy()->format('Y-m-d');
+        $d1 = $today->copy()->addDay()->format('Y-m-d');
+        $d3 = $today->copy()->addDays(3)->format('Y-m-d');
+        $d7 = $today->copy()->addDays(7)->format('Y-m-d');
+        $d14 = $today->copy()->addDays(14)->format('Y-m-d');
+
         $demoEvents = [
-            ['Art Class by Bakery Prasad', 'Sketching roots, shaping futures', 'Hands-on art class with community artists.', 'class', 'hybrid', '2026-06-10', '09:30:00', '11:30:00', 'Delhi Ambedkar Study Hall', 'Delhi', 'Delhi', '26 Alipur Road', 'Civil Lines', 'Near Vidhan Sabha Metro', 18],
-            ['Book Reading by ARC', 'Stories of resilience', 'Community reading and discussion circle.', 'reading_session', 'in_person', '2026-06-10', '12:00:00', '13:30:00', 'Jantar Mantar Community Tent', 'Delhi', 'Delhi', 'Jantar Mantar Road', null, 'Near Parliament Street', 24],
-            ['Constitution Study Circle', 'Learning together', 'Group study on constitutional values and public life.', 'panel', 'in_person', '2026-06-10', '15:00:00', '17:00:00', 'Saket Community Library', 'Delhi', 'Delhi', 'Press Enclave Road', 'Saket', 'Near Select Citywalk', 31],
-            ['Ambedkarite Poetry Night', 'Words of freedom', 'Poetry sharing and performances from community artists.', 'celebration', 'in_person', '2026-06-10', '18:00:00', '20:00:00', 'Dadar Social Justice Centre', 'Mumbai', 'Maharashtra', 'Dadar West', null, 'Near Chaityabhoomi', 45],
-            ['Online Workshop: Digital Safety', 'Stay safe online', 'Practical digital privacy workshop for organizers.', 'class', 'hybrid', '2026-06-10', '20:30:00', '22:00:00', 'Mumbai Digital Rights Hub', 'Mumbai', 'Maharashtra', 'Bandra Kurla Complex', 'Bandra East', 'Near MMRDA Grounds', 52],
-            ['Bahujan Film Screening', 'Cinema for the people', 'Screening and discussion of a Bahujan-focused documentary.', 'talk_series', 'in_person', '2026-06-15', '10:00:00', '12:30:00', 'Pune Peoples Theatre', 'Pune', 'Maharashtra', 'FC Road', null, 'Near Deccan Gymkhana', 40],
-            ['Community Wellness Retreat', 'Rest, heal, organize', 'A day-long community wellness and collective care gathering.', 'wellness_session', 'hybrid', '2026-06-15', '14:00:00', '17:00:00', 'Yerwada Community Centre', 'Pune', 'Maharashtra', 'Nagar Road', 'Yerwada', 'Near Yerwada Post Office', 28],
-            ['Anti-Caste Reading Circle', 'Read, reflect, organize', 'A guided reading session on anti-caste literature.', 'reading_session', 'in_person', '2026-06-15', '18:30:00', '20:00:00', 'Kothrud Study Space', 'Pune', 'Maharashtra', 'Karve Road', 'Kothrud', 'Near Paud Phata', 22],
-            ['Bahujan Art Museum Walk', 'Art, memory, resistance', 'A guided museum walk followed by community conversation.', 'art_museum_display', 'in_person', '2026-06-20', '11:00:00', '13:00:00', 'Albert Hall Museum Steps', 'Jaipur', 'Rajasthan', 'Museum Road', 'Ram Niwas Garden', 'Near Albert Hall Museum', 35],
-            ['Dalit History Talk Series', 'Histories from below', 'Public talk series on Dalit histories and community archives.', 'talk_series', 'hybrid', '2026-06-20', '16:00:00', '18:00:00', 'Jaipur Social Justice Forum', 'Jaipur', 'Rajasthan', 'MI Road', null, 'Near Ajmeri Gate', 26],
+            // Today
+            ['Art Class by Bakery Prasad', 'Sketching roots, shaping futures', 'Hands-on art class with community artists.', 'class', 'hybrid', $d0, '09:30:00', '11:30:00', 'Delhi Ambedkar Study Hall', 'Delhi', 'Delhi', '26 Alipur Road', 'Civil Lines', 'Near Vidhan Sabha Metro', 18],
+            ['Book Reading by ARC', 'Stories of resilience', 'Community reading and discussion circle.', 'reading_session', 'in_person', $d0, '12:00:00', '13:30:00', 'Jantar Mantar Community Tent', 'Delhi', 'Delhi', 'Jantar Mantar Road', null, 'Near Parliament Street', 24],
+            ['Constitution Study Circle', 'Learning together', 'Group study on constitutional values and public life.', 'panel', 'in_person', $d0, '15:00:00', '17:00:00', 'Saket Community Library', 'Delhi', 'Delhi', 'Press Enclave Road', 'Saket', 'Near Select Citywalk', 31],
+            // Tomorrow
+            ['Ambedkarite Poetry Night', 'Words of freedom', 'Poetry sharing and performances from community artists.', 'celebration', 'in_person', $d1, '18:00:00', '20:00:00', 'Dadar Social Justice Centre', 'Mumbai', 'Maharashtra', 'Dadar West', null, 'Near Chaityabhoomi', 45],
+            ['Online Workshop: Digital Safety', 'Stay safe online', 'Practical digital privacy workshop for organizers.', 'class', 'hybrid', $d1, '20:30:00', '22:00:00', 'Mumbai Digital Rights Hub', 'Mumbai', 'Maharashtra', 'Bandra Kurla Complex', 'Bandra East', 'Near MMRDA Grounds', 52],
+            // +3 days
+            ['Bahujan Film Screening', 'Cinema for the people', 'Screening and discussion of a Bahujan-focused documentary.', 'talk_series', 'in_person', $d3, '10:00:00', '12:30:00', 'Pune Peoples Theatre', 'Pune', 'Maharashtra', 'FC Road', null, 'Near Deccan Gymkhana', 40],
+            ['Community Wellness Retreat', 'Rest, heal, organize', 'A day-long community wellness and collective care gathering.', 'wellness_session', 'hybrid', $d3, '14:00:00', '17:00:00', 'Yerwada Community Centre', 'Pune', 'Maharashtra', 'Nagar Road', 'Yerwada', 'Near Yerwada Post Office', 28],
+            // +7 days
+            ['Anti-Caste Reading Circle', 'Read, reflect, organize', 'A guided reading session on anti-caste literature.', 'reading_session', 'in_person', $d7, '18:30:00', '20:00:00', 'Kothrud Study Space', 'Pune', 'Maharashtra', 'Karve Road', 'Kothrud', 'Near Paud Phata', 22],
+            ['Bahujan Art Museum Walk', 'Art, memory, resistance', 'A guided museum walk followed by community conversation.', 'art_museum_display', 'in_person', $d7, '11:00:00', '13:00:00', 'Albert Hall Museum Steps', 'Jaipur', 'Rajasthan', 'Museum Road', 'Ram Niwas Garden', 'Near Albert Hall Museum', 35],
+            // +14 days
+            ['Dalit History Talk Series', 'Histories from below', 'Public talk series on Dalit histories and community archives.', 'talk_series', 'hybrid', $d14, '16:00:00', '18:00:00', 'Jaipur Social Justice Forum', 'Jaipur', 'Rajasthan', 'MI Road', null, 'Near Ajmeri Gate', 26],
+            ['Youth Organizing Meetup', 'Build power together', 'Meetup for young organizers to share strategies and plan actions.', 'other', 'in_person', $d14, '10:00:00', '12:00:00', 'Bangalore Community Hub', 'Bangalore', 'Karnataka', 'MG Road', null, 'Near Metro Station', 19],
+            ['Open Mic for Liberation', 'Speak your truth', 'Open mic evening for poetry, music, and spoken word.', 'celebration', 'online', $d14, '19:00:00', '21:00:00', 'Online', 'Bangalore', 'Karnataka', null, null, null, 60],
         ];
 
         foreach ($demoEvents as $event) {
