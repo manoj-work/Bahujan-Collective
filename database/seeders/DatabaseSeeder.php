@@ -5,9 +5,10 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Database\Seeders\EventSeeder;
 use Database\Seeders\EventCategorySeeder;
+use Database\Seeders\EventSeeder;
 use Database\Seeders\EventTypeSeeder;
+use Database\Seeders\OrganizationSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -29,6 +30,7 @@ class DatabaseSeeder extends Seeder
             EventCategorySeeder::class,
             EventTypeSeeder::class,
             EventSeeder::class,
+            OrganizationSeeder::class,
         ]);
     }
 }

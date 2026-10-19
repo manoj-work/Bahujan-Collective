@@ -16,6 +16,8 @@ yarn-error.log
 /.idea
 /.vscode
 /.vapor
+/database/dumps/*.sql
+bahujan_collective_dump.sql
 /storage/debugbar
 /storage/logs
 /.VSCodeCounter
