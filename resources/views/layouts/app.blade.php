@@ -33,6 +33,7 @@
                     <a class="rounded-full bg-slate-800/70 px-4 py-2 font-medium text-slate-200 ring-1 ring-slate-700/80 transition hover:-translate-y-0.5 hover:bg-slate-700/70 {{ request()->routeIs('home') ? 'bg-slate-700/70' : '' }}" href="{{ route('home') }}">Home</a>
                     <a class="rounded-full bg-slate-800/70 px-4 py-2 font-medium text-slate-200 ring-1 ring-slate-700/80 transition hover:-translate-y-0.5 hover:bg-slate-700/70 {{ request()->routeIs('about') ? 'bg-slate-700/70' : '' }}" href="{{ route('about') }}">About</a>
                     <a class="rounded-full bg-slate-800/70 px-4 py-2 font-medium text-slate-200 ring-1 ring-slate-700/80 transition hover:-translate-y-0.5 hover:bg-slate-700/70 {{ request()->routeIs('submit-event') ? 'bg-slate-700/70' : '' }}" href="{{ route('submit-event') }}">Submit Events</a>
+                    <a class="rounded-full bg-slate-800/70 px-4 py-2 font-medium text-slate-200 ring-1 ring-slate-700/80 transition hover:-translate-y-0.5 hover:bg-slate-700/70 {{ request()->routeIs('import') ? 'bg-slate-700/70' : '' }}" href="{{ route('import') }}">Import</a>
                     <a class="rounded-full bg-slate-800/70 px-4 py-2 font-medium text-slate-200 ring-1 ring-slate-700/80 transition hover:-translate-y-0.5 hover:bg-slate-700/70 {{ request()->routeIs('contact') ? 'bg-slate-700/70' : '' }}" href="{{ route('contact') }}">Contact & Feedback</a>
                 </div>
             </header>
@@ -43,6 +44,7 @@
         {{ $slot }}
     </div>
 
+    @livewire('event-detail-modal')
     @livewire('feedback-modal')
 
     @livewireScripts
